@@ -56,6 +56,15 @@ int enforce_canvas_size(SDL_Surface** canvas, SDL_Surface* win) {
 extern struct c_effect c_effect_bitop;
 extern struct c_effect c_effect_mandelbrot;
 
+struct c_effect *c_effects_all[] = {
+	&c_effect_mandelbrot,
+	&c_effect_bitop,
+};
+
+#define C_EFFECTS_COUNT (sizeof(c_effects_all) / sizeof(c_effects_all[0]))
+
+size_t c_effects_current_index = 0;
+
 int main(int argc, const char* argv[]) {
 	struct keyboard_state key = {0};
 
@@ -70,7 +79,7 @@ int main(int argc, const char* argv[]) {
 	uint32_t frame_max = 0x0;
 	uint32_t frame_total = 0;
 
-	effect_t* current_effect = (effect_t*) &c_effect_mandelbrot;
+	effect_t* current_effect = (effect_t*) c_effects_all[c_effects_current_index];
 
 	LOG("Inicializando SDL");
 	if (SDL_Init(SDL_INIT_VIDEO))
@@ -84,6 +93,10 @@ int main(int argc, const char* argv[]) {
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT)
 				goto exit;
+			if (event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_TAB) {
+				current_effect = (effect_t *) c_effects_all[(++c_effects_current_index) % C_EFFECTS_COUNT];
+				continue;
+			}
 			if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
 				update_keyboard(&key, event.key);
 		}
