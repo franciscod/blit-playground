@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define LOG(format, ...) printf("[" __FILE__ ":%d] " format "\n", \
-                                __LINE__, ##__VA_ARGS__)
+#define LOG(format, ...) printf("[" __FILE__ ":%d] " format "\n", __LINE__, ##__VA_ARGS__)
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
